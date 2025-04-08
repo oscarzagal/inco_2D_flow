@@ -31,6 +31,8 @@ module flujo_de_masa
 
   end subroutine coef_d
 
+  ! TODO: añadir el termino para las fuerzas de cuerpo
+
   subroutine actualizar_flujo_de_masa()
 
     call coef_d()
@@ -118,10 +120,10 @@ module flujo_de_masa
 
         end if
 
-        me_star(i,j)=rho*ue(i,j)*deltay(j)
-        mw_star(i,j)=-rho*uw(i,j)*deltay(j)
-        mn_star(i,j)=rho*vn(i,j)*deltax(i)
-        ms_star(i,j)=-rho*vs(i,j)*deltax(i)
+        me_star(i,j)=ue(i,j)*deltay(j)
+        mw_star(i,j)=-uw(i,j)*deltay(j)
+        mn_star(i,j)=vn(i,j)*deltax(i)
+        ms_star(i,j)=-vs(i,j)*deltax(i)
 
       end do
     end do

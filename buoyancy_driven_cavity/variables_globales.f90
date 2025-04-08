@@ -9,13 +9,13 @@ module variables_globales
   integer :: i,j,k
 
   ! Subrelajacion
-  real(dp), parameter :: lambdaP=0.5_dp
-  real(dp), parameter :: lambdau=0.5_dp
-  real(dp), parameter :: lambdav=0.5_dp
+  real(dp), parameter :: lambdaP=0.3_dp
+  real(dp), parameter :: lambdau=0.6_dp
+  real(dp), parameter :: lambdav=0.6_dp
 
   ! Variables geometricas
   integer, parameter :: nx=21,ny=21
-  real(dp), parameter :: hx=0.1_dp,hy=0.1_dp
+  real(dp), parameter :: hx=0.05_dp,hy=0.05_dp
   real(dp), dimension(nx) :: x,deltax
   real(dp), dimension(ny) :: y,deltay
   real(dp), dimension(nx,ny) :: vol
@@ -29,16 +29,51 @@ module variables_globales
   ! Tolerancia
   real(dp), parameter :: epsilon=1e-5_dp
 
-  ! Propiedades termofisicas
-  ! real(dp), parameter :: mu=1.817e-5_dp
-  ! real(dp), parameter :: rho=1.2047_dp
 
-  real(dp), parameter :: mu=0.01_dp
+  ! Propiedades termofisicas
+
+  ! Viscosidad dinamica
+  real(dp), parameter :: nu=1.562e-5_dp
+
+  ! Temperatura de referencia
+  real(dp), parameter :: T_inf=25.0_dp
+
+  ! Coeficiente de expansividad termica
+  real(dp), parameter :: beta=1.0_dp/(T_inf+273.15_dp)
+
+  ! Densidad
   real(dp), parameter :: rho=1.0_dp
 
+  ! Calor espefico
+  real(dp), parameter :: Cp=7006.071_dp
+
+  ! Conductividad termica
+  real(dp), parameter :: k_ter=0.15_dp
+
+  ! Difusividad termica
+  real(dp), parameter :: alpha=k_ter/(rho*Cp)
+
+
+
+  ! Condiciones de frontera para la ecuacion de la energia
+  real(dp), parameter :: T_C=25.0814_dp
+  real(dp), parameter :: T_F=T_inf
+
+  ! Gravedad
+  real(dp), parameter :: g=-9.81_dp
+
+  ! Angulo de rotacion de la cavidad
+  real(dp), parameter :: theta=0.0_dp
+
+  ! Fuerza de flotacion
+  real(dp), dimension(nx,ny) :: fx_flotacion,fy_flotacion
+
+  ! Numero de Rayleigh
+  real(dp), parameter :: Ra=-(g*beta*(T_C-T_F)*hx**3.0_dp)/(alpha*nu)
+
   ! Condicion de frontera de pared deslizante
-  ! real(dp), parameter :: Uo=1.508e-3_dp
-  real(dp), parameter :: Uo=1.0_dp
+  real(dp), parameter :: Uo=0.0_dp
+
 
   ! Coeficientes agrupados para la ecuacion de momentum
   ! Direccion "x"
@@ -57,13 +92,31 @@ module variables_globales
   ! (presion supuesta, gradientes en "x" e "y", presion corregida)
   real(dp), dimension(nx,ny) :: Pstar,gPstar_u_vol,gPstar_v_vol,Pprime
 
-  ! Conductancia difusiva
-  real(dp), dimension(nx,ny) :: De,Dw,Dn,Ds
+  ! Coeficientes agrupados para la ecuacion de energia
+  real(dp), dimension(nx,ny) :: ap_T,ae_T,aw_T,an_T,as_T,b_T
+
+  ! Campo de temperatura
+  real(dp), dimension(nx,ny) :: T
+
+  ! Conductancia difusiva (ecuacion de momentum)
+  real(dp), dimension(nx,ny) :: FluxFe_dif_V,FluxFw_dif_V,FluxFn_dif_V,FluxFs_dif_V
+
+  ! Conductancia difusiva (ecuacion de energia)
+  real(dp), dimension(nx,ny) :: FluxFe_dif_T,FluxFw_dif_T,FluxFn_dif_T,FluxFs_dif_T
+
+  ! Flux convectivo (coeficiente ap)
+  real(dp), dimension(nx,ny) :: FluxCe_conv,FluxCw_conv,FluxCn_conv,FluxCs_conv
+
+  ! Flux convectivo (demas coeficientes)
+  real(dp), dimension(nx,ny) :: FluxFe_conv,FluxFw_conv,FluxFn_conv,FluxFs_conv
+
 
   ! Flujo de masa en las caras
   real(dp), dimension(nx,ny) :: me_star,mw_star,mn_star,ms_star
 
+
   ! Identificadores para la subrutina del criterio de convergencia
+  ! (mi intento de Enum xd)
   integer, parameter :: residual_presion=1
   integer, parameter :: residual_u=2
   integer, parameter :: residual_v=3
@@ -71,9 +124,10 @@ module variables_globales
   integer, parameter :: residual_mw=5
   integer, parameter :: residual_mn=6
   integer, parameter :: residual_ms=7
+  integer, parameter :: residual_energia=8
 
   ! Residual actualizado
-  real(dp), dimension(7) :: resnew
+  real(dp), dimension(8) :: resnew
 
 
   ! Error mayor
@@ -87,7 +141,7 @@ module variables_globales
   character(len=20) :: nombre
 
   ! Variables de la iteracion anterior
-  real(dp), dimension(nx,ny) :: Pold,u_old,v_old
+  real(dp), dimension(nx,ny) :: Pold,u_old,v_old,T_old
   real(dp), dimension(nx,ny) :: me_old,mw_old,mn_old,ms_old
 
   ! Velocidades en las caras

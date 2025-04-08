@@ -12,12 +12,11 @@ SRC=variables_globales.f90\
 		gradiente_explicito.f90\
 		gauss_seidel.f90\
 		conductancia_difusiva.f90\
-		esquema_ley_de_potencia.f90\
 		esquema_upwind.f90\
-		esquema_lineal.f90\
 		ecuacion_momentum.f90\
 		flujo_de_masa.f90\
 		ecuacion_presion.f90\
+		ecuacion_energia.f90\
 		correccion.f90\
 		criterio_convergencia.f90\
 		reasignacion.f90\
@@ -32,5 +31,4 @@ main: $(OBJ)
 	$(FC) $(FFLAGS) -o $@ $(OBJ)
 
 clean:
-	@rm -f *.mod *.o main #cambiar
-
+	@rm -f *.mod *.o main

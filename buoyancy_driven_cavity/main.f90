@@ -8,6 +8,7 @@ program main
   use conductancia_difusiva, only:conductancia_difusiva_
   use gradiente_explicito, only:gradiente_explicito_
   use ecuacion_momentum, only:ecuacion_momentum_
+  use ecuacion_energia, only:ecuacion_energia_
   use flujo_de_masa, only:actualizar_flujo_de_masa
   use ecuacion_presion, only:ecuacion_presion_
   use correccion, only:corregir_presion_velocidad_flujo
@@ -31,6 +32,7 @@ program main
   ap_u(:,:)=1.0_dp
   ap_v(:,:)=1.0_dp
   ap_p(:,:)=1.0_dp
+  ap_T(:,:)=1.0_dp
 
   ! Inicializacion del campo supuesto de presion
   Pstar(:,:)=1.0_dp
@@ -47,6 +49,9 @@ program main
 
   u_old=u_star
 
+  ! Inicializacion del campo de temperaturas
+  T(:,:)=25.0_dp
+
   ! Asignacion de las velocidades en las fronteras
   ! Ecuacion de momentum en "u"
   call calcular_velocidades_fronteras(u_star,Uo)
@@ -55,7 +60,13 @@ program main
   call calcular_velocidades_fronteras(v_star,0.0_dp)
 
   ! Terminos difusivos (solo es necesario calcularlos al principio)
-  call conductancia_difusiva_()
+  ! Ecuacion de momentum
+  call conductancia_difusiva_(nu,FluxFe_dif_V,FluxFw_dif_V,FluxFn_dif_V, &
+  FluxFs_dif_V)
+
+  ! Ecuacion de energia
+  call conductancia_difusiva_(alpha,FluxFe_dif_T,FluxFw_dif_T,FluxFn_dif_T &
+  ,FluxFs_dif_T)
 
 
 
@@ -77,6 +88,9 @@ do while(error_mayor .gt. epsilon)
   ! Correccion de los campos
   call corregir_presion_velocidad_flujo()
 
+  ! Resolucion de la ecuacion de la energia
+  call ecuacion_energia_()
+
   ! Convergencia
   call convergencia(Pstar,Pold,residual_presion)
   call convergencia(u_star,u_old,residual_u)
@@ -85,11 +99,12 @@ do while(error_mayor .gt. epsilon)
   call convergencia(mw_star,mw_old,residual_mw)
   call convergencia(mn_star,mn_old,residual_mn)
   call convergencia(ms_star,ms_old,residual_ms)
+  call convergencia(T,T_old,residual_energia)
 
   ! Eleccion del error mayor
   error_mayor=resnew(residual_presion)
   variable=residual_presion
-  do i=2,7
+  do i=2,8
     if (resnew(i).gt.error_mayor) then
       error_mayor=resnew(i)
       variable=i
@@ -115,6 +130,8 @@ do while(error_mayor .gt. epsilon)
       nombre="mn"
   else if (variable==7) then
       nombre="ms"
+  else if (variable==8) then
+      nombre="Energia"
   end if
 
   write(*,*)numit,error_mayor," variable: ", nombre
@@ -128,6 +145,9 @@ do while(error_mayor .gt. epsilon)
 
 end do ! Fin del bucle SIMPLE
 
+  write(*,*)""
+  write(*,*)"Numero de Rayleigh = ", Ra
+  write(*,*)""
 
 
   ! Magnitud de la velocidad
@@ -140,5 +160,6 @@ end do ! Fin del bucle SIMPLE
   call escritura_(90,'Pstar.dat','Pstar',Pstar)
   call escritura_(90,'Umag.dat','Umag',Umag)
   call escritura_(10,'me.dat','me',me_star)
+  call escritura_(76, 'T.dat', 'T', T)
 
 end program main

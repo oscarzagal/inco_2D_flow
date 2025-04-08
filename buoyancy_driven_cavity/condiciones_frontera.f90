@@ -4,7 +4,8 @@ module condiciones_frontera
   use utilidades
   implicit none
 
-  public ::calcular_velocidades_fronteras,actualizar_presion_fronteras
+  public ::calcular_velocidades_fronteras,actualizar_presion_fronteras, &
+       temperaturas_fronteras
   private
 
   contains
@@ -52,5 +53,19 @@ module condiciones_frontera
     end do
 
   end subroutine actualizar_presion_fronteras
+
+  subroutine temperaturas_fronteras()
+
+    do i=1,nx
+      T(i,ny)=T(i,ny-1) ! Frontera norte
+      T(i,1)=T(i,2) ! Frontera sur
+    end do
+
+    do j=2,ny-1
+      T(nx,j)=T_F ! Frontera este
+      T(1,j)=T_C ! Frontera oeste
+    end do
+
+  end subroutine temperaturas_fronteras
 
 end module condiciones_frontera

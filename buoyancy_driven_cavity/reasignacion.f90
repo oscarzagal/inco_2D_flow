@@ -18,6 +18,7 @@ module reasignacion
     mw_old=mw_star
     mn_old=mn_star
     ms_old=ms_star
+    T_old=T
 
     ue_n=ue
     uw_n=uw
