@@ -94,11 +94,11 @@ module correccion
           end if
 
           ! Correcion de presion
-          if (i==2 .and. j==1) then
-             Pstar(i,j)=0.0_dp
-          else
+          ! if (i==2 .and. j==1) then
+             ! Pstar(i,j)=0.0_dp
+          ! else
              Pstar(i,j)=Pstar(i,j)+lambdaP*Pprime(i,j)
-          end if
+          ! end if
 
       end do
     end do

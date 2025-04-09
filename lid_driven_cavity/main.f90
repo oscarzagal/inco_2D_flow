@@ -1,3 +1,5 @@
+! TODO: incorporar el falso transitorio
+
 program main
   use, intrinsic :: iso_fortran_env, only: sp=>real32, dp=>real64
   use variables_globales
@@ -128,6 +130,14 @@ do while(error_mayor .gt. epsilon)
 
 end do ! Fin del bucle SIMPLE
 
+  write(*,*)" "
+  write(*,*)"Uo =",Uo
+  write(*,*)"rho =",rho
+  write(*,*)"mu =",mu
+  write(*,*)"hx =",hx
+  write(*,*)"Re =",Re
+  write(*,*)" "
+
 
 
   ! Magnitud de la velocidad
@@ -139,6 +149,8 @@ end do ! Fin del bucle SIMPLE
 
   call escritura_(90,'Pstar.dat','Pstar',Pstar)
   call escritura_(90,'Umag.dat','Umag',Umag)
+  call escritura_(23,'U.dat','U',u_star)
+  call escritura_(33,'V.dat','V',v_star)
   call escritura_(10,'me.dat','me',me_star)
 
 end program main

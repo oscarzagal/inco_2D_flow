@@ -9,13 +9,18 @@ module variables_globales
   integer :: i,j,k
 
   ! Subrelajacion
-  real(dp), parameter :: lambdaP=0.5_dp
-  real(dp), parameter :: lambdau=0.5_dp
-  real(dp), parameter :: lambdav=0.5_dp
+  ! Se demostro empiricamente que con estos factores de subrelajacion se
+  ! consiguien resultados adecuados para numeros de Reynolds de 100 y 400.
+  ! Ademas es necesario aumentar el numero de elementos computacionales para
+  ! lograr la mejor concordancia con la referencia (pagina 252 PDF Xaman).
+  real(dp), parameter :: lambdaP=0.1_dp
+  real(dp), parameter :: lambdau=0.9_dp
+  real(dp), parameter :: lambdav=0.9_dp
 
   ! Variables geometricas
-  integer, parameter :: nx=21,ny=21
-  real(dp), parameter :: hx=0.1_dp,hy=0.1_dp
+  integer, parameter :: nx=121,ny=121
+  ! real(dp), parameter :: hx=0.1_dp,hy=0.1_dp
+  real(dp), parameter :: hx=1.0_dp,hy=1.0_dp
   real(dp), dimension(nx) :: x,deltax
   real(dp), dimension(ny) :: y,deltay
   real(dp), dimension(nx,ny) :: vol
@@ -33,12 +38,15 @@ module variables_globales
   ! real(dp), parameter :: mu=1.817e-5_dp
   ! real(dp), parameter :: rho=1.2047_dp
 
-  real(dp), parameter :: mu=0.01_dp
+  real(dp), parameter :: mu=2.5e-3_dp
   real(dp), parameter :: rho=1.0_dp
 
   ! Condicion de frontera de pared deslizante
   ! real(dp), parameter :: Uo=1.508e-3_dp
   real(dp), parameter :: Uo=1.0_dp
+
+  ! Numero de Reynolds
+  real(dp), parameter :: Re=(rho*hx*Uo)/mu
 
   ! Coeficientes agrupados para la ecuacion de momentum
   ! Direccion "x"

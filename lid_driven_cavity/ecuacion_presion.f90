@@ -16,7 +16,6 @@ module ecuacion_presion
 
   subroutine ecuacion_presion_()
 
-
     do j=2,ny-1
       do i=2,nx-1
 
