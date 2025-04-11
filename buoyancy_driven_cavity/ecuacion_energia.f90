@@ -48,12 +48,13 @@ module ecuacion_energia
           an_T(i,j)=FluxFn_conv(i,j)-FluxFn_dif_T(i,j)
           as_T(i,j)=FluxFs_conv(i,j)-FluxFs_dif_T(i,j)
 
-          ap_T(i,j)=FluxCe_conv(i,j)+FluxCw_conv(i,j) &
+          ap_T(i,j)=(FluxCe_conv(i,j)+FluxCw_conv(i,j) &
                +FluxCn_conv(i,j)+FluxCs_conv(i,j) &
                +FluxFe_dif_T(i,j)+FluxFw_dif_T(i,j) &
-               +FluxFn_dif_T(i,j)+FluxFs_dif_T(i,j)
+               +FluxFn_dif_T(i,j)+FluxFs_dif_T(i,j))/lambdaT
 
-          b_T(i,j)=0.0_dp
+          ! b_T(i,j)=0.0_dp
+          b_T(i,j)=(1.0_dp-lambdaT)*ap_T(i,j)*T(i,j)
 
        end do
     end do

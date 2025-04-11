@@ -10,6 +10,15 @@ module flujo_de_masa
   real(dp) :: gPstar_e_i,gPstar_w_i,gPstar_n_i,gPstar_s_i
   real(dp) :: de_i,dw_i,dn_i,ds_i
 
+  ! Fuerzas de cuerpo en las caras promediadas 1 vez
+  real(dp), dimension(nx,ny) :: B_e_i,B_w_i,B_n_i,B_s_i
+
+  ! Fuerzas de cuerpo en el centroide de la celda promediadas 2 veces
+  real(dp), dimension(nx,ny) :: B_u_ii,B_v_ii
+
+  ! Fuerzas de cuerpo en las caras promediadas 3 veces
+  real(dp), dimension(nx,ny) :: B_e_iii,B_w_iii,B_n_iii,B_s_iii 
+
   public :: actualizar_flujo_de_masa
   private
 
@@ -31,11 +40,43 @@ module flujo_de_masa
 
   end subroutine coef_d
 
+  subroutine fuerzas_flotacion()
+
+      do j=2,ny-1
+        do i=2,nx-1
+         ! Promediado 1 vez
+         B_e_i(i,j)=ge(i,j)*fx_flotacion(i+1,j)+(1.0_dp-ge(i,j))*fx_flotacion(i,j)
+         B_w_i(i,j)=gw(i,j)*fx_flotacion(i-1,j)+(1.0_dp-gw(i,j))*fx_flotacion(i,j)
+         B_n_i(i,j)=gn(i,j)*fy_flotacion(i,j+1)+(1.0_dp-gn(i,j))*fy_flotacion(i,j)
+         B_s_i(i,j)=gs(i,j)*fy_flotacion(i,j-1)+(1.0_dp-gs(i,j))*fy_flotacion(i,j)
+
+         ! Promediado 2 veces
+         B_u_ii(i,j)=(-1.0_dp*((1.0_dp-ge(i,j))*(B_e_i(i,j)*(x(i+1)-x(i))*deltay(j))) &
+         -((1.0_dp-gw(i,j))*(B_w_i(i,j)*(x(i)-x(i-1))*deltay(j))))/vol(i,j)
+         B_v_ii(i,j)=(-1.0_dp*((1.0_dp-gn(i,j))*(B_n_i(i,j)*(y(j+1)-y(j))*deltax(i))) &
+         -((1.0_dp-gs(i,j))*(B_s_i(i,j)*(y(j)-y(j-1))*deltax(i))))/vol(i,j)
+
+        end do
+      end do
+
+      ! Promediado 3 veces
+      do j=2,ny-1
+        do i=2,nx-1
+         B_e_iii(i,j)=ge(i,j)*B_u_ii(i+1,j)+(1.0_dp-ge(i,j))*B_u_ii(i,j)
+         B_w_iii(i,j)=gw(i,j)*B_u_ii(i-1,j)+(1.0_dp-gw(i,j))*B_u_ii(i,j)
+         B_n_iii(i,j)=gn(i,j)*B_u_ii(i,j+1)+(1.0_dp-gn(i,j))*B_u_ii(i,j)
+         B_s_iii(i,j)=gs(i,j)*B_u_ii(i,j-1)+(1.0_dp-gs(i,j))*B_u_ii(i,j)
+        end do
+      end do
+
+  end subroutine fuerzas_flotacion
+
   ! TODO: añadir el termino para las fuerzas de cuerpo
 
   subroutine actualizar_flujo_de_masa()
 
     call coef_d()
+    call fuerzas_flotacion()
 
     do j=2,ny-1
       do i=2,nx-1
@@ -56,7 +97,8 @@ module flujo_de_masa
          *gPstar_u_vol(i,j)/vol(i,j)
 
          ue(i,j)=ue_i(i,j)-de_i*((Pstar(i+1,j)-Pstar(i,j))/(x(i+1)-x(i))&
-              -gPstar_e_i)+(1.0_dp-lambdau)*(ue_n(i,j)-ue_i_n(i,j))
+              -gPstar_e_i)+(1.0_dp-lambdau)*(ue_n(i,j)-ue_i_n(i,j))&
+              +de_i*(B_e_i(i,j)-B_e_iii(i,j))
 
         end if
 
@@ -76,7 +118,8 @@ module flujo_de_masa
            *gPstar_u_vol(i,j)/vol(i,j)
 
            uw(i,j)=uw_i(i,j)-dw_i*((Pstar(i,j)-Pstar(i-1,j))/(x(i)-x(i-1))&
-                -gPstar_w_i)+(1.0_dp-lambdau)*(uw_n(i,j)-uw_i_n(i,j))
+                -gPstar_w_i)+(1.0_dp-lambdau)*(uw_n(i,j)-uw_i_n(i,j))&
+                +dw_i*(B_w_i(i,j)-B_w_iii(i,j))
 
         end if
 
@@ -96,7 +139,8 @@ module flujo_de_masa
            *gPstar_v_vol(i,j)/vol(i,j)
 
            vn(i,j)=vn_i(i,j)-dn_i*((Pstar(i,j+1)-Pstar(i,j))/(y(j+1)-y(j))&
-                -gPstar_n_i)+(1.0_dp-lambdav)*(vn_n(i,j)-vn_i_n(i,j))
+                -gPstar_n_i)+(1.0_dp-lambdav)*(vn_n(i,j)-vn_i_n(i,j))&
+                +dn_i*(B_n_i(i,j)-B_n_iii(i,j))
 
         end if
 
@@ -116,7 +160,8 @@ module flujo_de_masa
            *gPstar_v_vol(i,j)/vol(i,j)
 
            vs(i,j)=vs_i(i,j)-ds_i*((Pstar(i,j)-Pstar(i,j-1))/(y(j)-y(j-1))&
-                -gPstar_s_i)+(1.0_dp-lambdav)*(vs_n(i,j)-vs_i_n(i,j))
+                -gPstar_s_i)+(1.0_dp-lambdav)*(vs_n(i,j)-vs_i_n(i,j))&
+                +ds_i*(B_s_i(i,j)-B_s_iii(i,j))
 
         end if
 

@@ -44,13 +44,14 @@ program main
   ms_star(:,:)=0.0_dp
 
   ! Inicializacion del campo supuesto de velocidad
-  u_star(:,:)=0.0005_dp
+  u_star(:,:)=0.0_dp
   v_star(:,:)=0.0_dp
 
   u_old=u_star
+  v_old=v_star
 
   ! Inicializacion del campo de temperaturas
-  T(:,:)=25.0_dp
+  T(:,:)=0.0_dp
 
   ! Asignacion de las velocidades en las fronteras
   ! Ecuacion de momentum en "u"
@@ -67,7 +68,6 @@ program main
   ! Ecuacion de energia
   call conductancia_difusiva_(alpha,FluxFe_dif_T,FluxFw_dif_T,FluxFn_dif_T &
   ,FluxFs_dif_T)
-
 
 
   ! Inicio del bucle SIMPLE
@@ -88,8 +88,34 @@ do while(error_mayor .gt. epsilon)
   ! Correccion de los campos
   call corregir_presion_velocidad_flujo()
 
+  ! write(*,*)"********************************************"
+  ! write(*,*)"T(3,2) =",T(3,2)
+  ! write(*,*)"T(1,2) =",T(1,2)
+  ! write(*,*)"T(2,3) =",T(2,3)
+  ! write(*,*)"T(2,1) =",T(2,1)
+  ! write(*,*)"********************************************"
+
   ! Resolucion de la ecuacion de la energia
   call ecuacion_energia_()
+
+  ! do j=1,ny
+  !   do i=1,nx
+  !     write(*,*)"v_star(",i,j,") =",v_star(i,j)
+  !   end do
+  ! end do
+
+  ! write(*,*)"ap_T(2,2) =",ap_T(2,2)
+  ! write(*,*)"ae_T(2,2) =",ae_T(2,2)
+  ! write(*,*)"aw_T(2,2) =",aw_T(2,2)
+  ! write(*,*)"an_T(2,2) =",an_T(2,2)
+  ! write(*,*)"as_T(2,2) =",as_T(2,2)
+  ! write(*,*)"b_T(2,2) =",b_T(2,2)
+  ! write(*,*)"T(2,2) =",T(2,2)
+  ! write(*,*)"mw_star(2,2) =",mw_star(2,2)
+  ! write(*,*)"alpha =",alpha
+
+  ! if (.true.) exit
+
 
   ! Convergencia
   call convergencia(Pstar,Pold,residual_presion)
@@ -133,6 +159,12 @@ do while(error_mayor .gt. epsilon)
   else if (variable==8) then
       nombre="Energia"
   end if
+
+  ! do j=1,ny
+  !    do i=1,nx
+  !       write(*,*)"∑ \dot{m}_{f} =",me_star(i,j)+mw_star(i,j)+mn_star(i,j)+ms_star(i,j)
+  !    end do
+  ! end do
 
   write(*,*)numit,error_mayor," variable: ", nombre
 

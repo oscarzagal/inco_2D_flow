@@ -2,19 +2,17 @@ module variables_globales
   use, intrinsic :: iso_fortran_env, only: sp=>real32, dp=>real64
   implicit none
 
-  ! Control
-  integer :: esquema=1
-
   ! Variables para bucles
   integer :: i,j,k
 
   ! Subrelajacion
-  real(dp), parameter :: lambdaP=0.3_dp
-  real(dp), parameter :: lambdau=0.6_dp
-  real(dp), parameter :: lambdav=0.6_dp
+  real(dp), parameter :: lambdaP=0.1_dp
+  real(dp), parameter :: lambdau=0.9_dp
+  real(dp), parameter :: lambdav=0.9_dp
+  real(dp), parameter :: lambdaT=0.7_dp
 
   ! Variables geometricas
-  integer, parameter :: nx=21,ny=21
+  integer, parameter :: nx=5,ny=5
   real(dp), parameter :: hx=0.05_dp,hy=0.05_dp
   real(dp), dimension(nx) :: x,deltax
   real(dp), dimension(ny) :: y,deltay
@@ -39,7 +37,7 @@ module variables_globales
   real(dp), parameter :: T_inf=25.0_dp
 
   ! Coeficiente de expansividad termica
-  real(dp), parameter :: beta=1.0_dp/(T_inf+273.15_dp)
+  real(dp), parameter :: beta=1.0_dp/(25.0_dp+273.15_dp)
 
   ! Densidad
   real(dp), parameter :: rho=1.0_dp
@@ -57,7 +55,7 @@ module variables_globales
 
   ! Condiciones de frontera para la ecuacion de la energia
   real(dp), parameter :: T_C=25.0814_dp
-  real(dp), parameter :: T_F=T_inf
+  real(dp), parameter :: T_F=25.0_dp
 
   ! Gravedad
   real(dp), parameter :: g=-9.81_dp

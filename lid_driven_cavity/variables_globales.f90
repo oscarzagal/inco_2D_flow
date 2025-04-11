@@ -13,9 +13,12 @@ module variables_globales
   ! consiguien resultados adecuados para numeros de Reynolds de 100 y 400.
   ! Ademas es necesario aumentar el numero de elementos computacionales para
   ! lograr la mejor concordancia con la referencia (pagina 252 PDF Xaman).
-  real(dp), parameter :: lambdaP=0.1_dp
-  real(dp), parameter :: lambdau=0.9_dp
-  real(dp), parameter :: lambdav=0.9_dp
+  ! Actualizacion: lo mas importante es la malla, para un Re > 100 o 400
+  ! es importante que la malla sea muy fina, de lo contrario se obtienen
+  ! resultados de baja calidad.
+  real(dp), parameter :: lambdaP=0.3_dp
+  real(dp), parameter :: lambdau=0.6_dp
+  real(dp), parameter :: lambdav=0.6_dp
 
   ! Variables geometricas
   integer, parameter :: nx=121,ny=121
