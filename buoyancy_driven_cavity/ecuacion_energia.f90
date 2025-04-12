@@ -51,10 +51,11 @@ module ecuacion_energia
           ap_T(i,j)=(FluxCe_conv(i,j)+FluxCw_conv(i,j) &
                +FluxCn_conv(i,j)+FluxCs_conv(i,j) &
                +FluxFe_dif_T(i,j)+FluxFw_dif_T(i,j) &
-               +FluxFn_dif_T(i,j)+FluxFs_dif_T(i,j))/lambdaT
+               +FluxFn_dif_T(i,j)+FluxFs_dif_T(i,j) &
+               +vol(i,j)/deltat)/lambdaT
 
           ! b_T(i,j)=0.0_dp
-          b_T(i,j)=(1.0_dp-lambdaT)*ap_T(i,j)*T(i,j)
+          b_T(i,j)=(1.0_dp-lambdaT)*ap_T(i,j)*T(i,j)+T(i,j)*vol(i,j)/deltat
 
        end do
     end do

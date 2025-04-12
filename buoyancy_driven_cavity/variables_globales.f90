@@ -6,23 +6,26 @@ module variables_globales
   integer :: i,j,k
 
   ! Subrelajacion
-  real(dp), parameter :: lambdaP=0.1_dp
-  real(dp), parameter :: lambdau=0.9_dp
-  real(dp), parameter :: lambdav=0.9_dp
-  real(dp), parameter :: lambdaT=0.7_dp
+  real(dp), parameter :: lambdaP=0.3_dp
+  real(dp), parameter :: lambdau=0.6_dp
+  real(dp), parameter :: lambdav=0.6_dp
+  real(dp), parameter :: lambdaT=0.1_dp
 
   ! Variables geometricas
-  integer, parameter :: nx=5,ny=5
+  integer, parameter :: nx=55,ny=55
   real(dp), parameter :: hx=0.05_dp,hy=0.05_dp
   real(dp), dimension(nx) :: x,deltax
   real(dp), dimension(ny) :: y,deltay
   real(dp), dimension(nx,ny) :: vol
 
+  ! Paso de tiempo para el falso transitorio
+  real(dp), parameter :: deltat=0.35_dp
+
   ! Interpolacion
   real(dp), dimension(nx,ny) :: ge,gw,gn,gs
 
   ! Limite de iteraciones
-  integer, parameter :: limite=20000
+  integer, parameter :: limite=50000
 
   ! Tolerancia
   real(dp), parameter :: epsilon=1e-5_dp

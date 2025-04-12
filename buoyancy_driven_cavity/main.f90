@@ -3,8 +3,7 @@ program main
   use variables_globales
   use malla
   use escritura, only:escritura_
-  use condiciones_frontera, only:calcular_velocidades_fronteras, &
-  actualizar_presion_fronteras
+  use condiciones_frontera
   use conductancia_difusiva, only:conductancia_difusiva_
   use gradiente_explicito, only:gradiente_explicito_
   use ecuacion_momentum, only:ecuacion_momentum_
@@ -60,6 +59,11 @@ program main
   ! Ecuacion de momentum en "v"
   call calcular_velocidades_fronteras(v_star,0.0_dp)
 
+  ! Condiciones de frontera para la ecuacion de la energia
+  call temperaturas_fronteras()
+
+  T_old=T
+
   ! Terminos difusivos (solo es necesario calcularlos al principio)
   ! Ecuacion de momentum
   call conductancia_difusiva_(nu,FluxFe_dif_V,FluxFw_dif_V,FluxFn_dif_V, &
@@ -70,8 +74,10 @@ program main
   ,FluxFs_dif_T)
 
 
+
   ! Inicio del bucle SIMPLE
 do while(error_mayor .gt. epsilon)
+
 
   ! Campo Pprime iniciado en cero cada iteracion
   Pprime(:,:)=0.0_dp
@@ -85,24 +91,98 @@ do while(error_mayor .gt. epsilon)
   ! Se resuelve la ecuacion de correccion de presion
   call ecuacion_presion_()
 
+    ! write(*,*)"Antes de la correccion"
+    ! do j=1,ny
+    !   do i=1,nx
+    !     write(*,*)"v_star(",i,j,") =",v_star(i,j)
+    !     ! write(*,*)"T(",i,j,") =",T(i,j)
+    !   end do
+    ! end do
+    ! write(*,*)" "
+
   ! Correccion de los campos
   call corregir_presion_velocidad_flujo()
 
-  ! write(*,*)"********************************************"
-  ! write(*,*)"T(3,2) =",T(3,2)
-  ! write(*,*)"T(1,2) =",T(1,2)
-  ! write(*,*)"T(2,3) =",T(2,3)
-  ! write(*,*)"T(2,1) =",T(2,1)
-  ! write(*,*)"********************************************"
+    ! write(*,*)"Despues de la correccion"
+    ! do j=1,ny
+    !   do i=1,nx
+    !     write(*,*)"v_star(",i,j,") =",v_star(i,j)
+    !     ! write(*,*)"T(",i,j,") =",T(i,j)
+    !   end do
+    ! end do
+    ! write(*,*)" "
 
-  ! Resolucion de la ecuacion de la energia
-  call ecuacion_energia_()
+    ! write(*,*)"********************************************"
+    ! write(*,*)"T(3,2) =",T(3,2)
+    ! write(*,*)"T(1,2) =",T(1,2)
+    ! write(*,*)"T(2,3) =",T(2,3)
+    ! write(*,*)"T(2,1) =",T(2,1)
+    ! write(*,*)"********************************************"
 
-  ! do j=1,ny
-  !   do i=1,nx
-  !     write(*,*)"v_star(",i,j,") =",v_star(i,j)
-  !   end do
-  ! end do
+    ! Resolucion de la ecuacion de la energia
+    call ecuacion_energia_()
+
+    ! write(*,*)"Coeficiente ap_v"
+    ! do j=1,ny
+    !   do i=1,nx
+    !     write(*,*)"ap_v(",i,j,") =",ap_v(i,j)
+    !   end do
+    ! end do
+    ! write(*,*)" "
+
+    ! write(*,*)"Coeficiente ae_v"
+    ! do j=1,ny
+    !   do i=1,nx
+    !     write(*,*)"ae_v(",i,j,") =",ae_v(i,j)
+    !   end do
+    ! end do
+    ! write(*,*)" "
+
+    ! write(*,*)"Coeficiente aw_v"
+    ! do j=1,ny
+    !   do i=1,nx
+    !     write(*,*)"aw_v(",i,j,") =",aw_v(i,j)
+    !   end do
+    ! end do
+    ! write(*,*)" "
+
+    ! write(*,*)"Coeficiente an_v"
+    ! do j=1,ny
+    !   do i=1,nx
+    !     write(*,*)"an_v(",i,j,") =",an_v(i,j)
+    !   end do
+    ! end do
+    ! write(*,*)" "
+
+    ! write(*,*)"Coeficiente as_v"
+    ! do j=1,ny
+    !   do i=1,nx
+    !     write(*,*)"as_v(",i,j,") =",as_v(i,j)
+    !   end do
+    ! end do
+    ! write(*,*)" "
+
+    ! write(*,*)"Coeficiente b_v"
+    ! do j=1,ny
+    !   do i=1,nx
+    !     write(*,*)"b_v(",i,j,") =",b_v(i,j)
+    !   end do
+    ! end do
+    ! write(*,*)" "
+
+    ! if (numit==2) exit
+
+    ! do j=1,ny
+    !   do i=1,nx
+    !     write(*,*)"T_old(",i,j,")",T_old(i,j)
+    !   end do
+    ! end do
+
+    ! do j=1,ny
+    !   do i=1,nx
+    !     write(*,*)"T(",i,j,")",T(i,j)
+    !   end do
+    ! end do
 
   ! write(*,*)"ap_T(2,2) =",ap_T(2,2)
   ! write(*,*)"ae_T(2,2) =",ae_T(2,2)
@@ -177,9 +257,12 @@ do while(error_mayor .gt. epsilon)
 
 end do ! Fin del bucle SIMPLE
 
-  write(*,*)""
-  write(*,*)"Numero de Rayleigh = ", Ra
-  write(*,*)""
+  write(*,*)" "
+  write(*,*)"deltat falso =",deltat
+  write(*,*)"Difusividad termica =",alpha
+  write(*,*)"Numero de Prandtl =",nu/alpha
+  write(*,*)"Numero de Rayleigh =", Ra
+  write(*,*)" "
 
 
   ! Magnitud de la velocidad

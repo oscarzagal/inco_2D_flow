@@ -28,6 +28,11 @@ module variables_globales
   real(dp), dimension(ny) :: y,deltay
   real(dp), dimension(nx,ny) :: vol
 
+  ! Paso de tiempo para el falso transitorio. Se probo que para 0.1 y 0.5
+  ! los resultados son iguales, por lo que no hay dependencia del paso de
+  ! tiempo falso.
+  real(dp), parameter :: deltat=0.5_dp
+
   ! Interpolacion
   real(dp), dimension(nx,ny) :: ge,gw,gn,gs
 

@@ -1,6 +1,7 @@
 module esquema_upwind
   use, intrinsic :: iso_fortran_env, only: sp=>real32, dp=>real64
   use variables_globales
+  use malla
   implicit none
 
   public :: esquema_upwind_
@@ -25,9 +26,9 @@ module esquema_upwind
              +Dw(i,j)+max(mw_star(i,j),0.0_dp) &
              +Dn(i,j)+max(0.0_dp,mn_star(i,j)) &
              +Ds(i,j)+max(ms_star(i,j),0.0_dp) &
-             )/lambda
+             +vol(i,j)/deltat)/lambda
 
-        b(i,j)=-gPstar(i,j)+(1.0_dp-lambda)*ap(i,j)*vel(i,j)
+        b(i,j)=-gPstar(i,j)+(1.0_dp-lambda)*ap(i,j)*vel(i,j)+vel(i,j)*vol(i,j)/deltat
 
       end do
     end do

@@ -131,6 +131,7 @@ do while(error_mayor .gt. epsilon)
 end do ! Fin del bucle SIMPLE
 
   write(*,*)" "
+  write(*,*)"deltat falso =",deltat
   write(*,*)"Uo =",Uo
   write(*,*)"rho =",rho
   write(*,*)"mu =",mu

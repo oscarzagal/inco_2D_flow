@@ -27,5 +27,3 @@ colorbar
 caxis([0 1]);
 colormap jet
 axis equal
-
-
