@@ -16,6 +16,8 @@ program main
   use sobrecarga_operadores
   use utilidades
 
+  implicit none
+
   ! Generacion de la malla computacional
   call mallado(nx,hx,x,deltax)
   call mallado(ny,hy,y,deltay)

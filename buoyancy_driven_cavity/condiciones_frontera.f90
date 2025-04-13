@@ -56,7 +56,7 @@ module condiciones_frontera
 
   subroutine temperaturas_fronteras()
 
-    do i=2,nx-1
+    do i=1,nx
       T(i,ny)=T(i,ny-1) ! Frontera norte
       T(i,1)=T(i,2) ! Frontera sur
     end do

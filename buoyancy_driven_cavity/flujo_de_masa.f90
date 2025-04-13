@@ -17,7 +17,7 @@ module flujo_de_masa
   real(dp), dimension(nx,ny) :: B_u_ii,B_v_ii
 
   ! Fuerzas de cuerpo en las caras promediadas 3 veces
-  real(dp), dimension(nx,ny) :: B_e_iii,B_w_iii,B_n_iii,B_s_iii 
+  real(dp), dimension(nx,ny) :: B_e_iii,B_w_iii,B_n_iii,B_s_iii
 
   public :: actualizar_flujo_de_masa
   private
@@ -97,8 +97,8 @@ module flujo_de_masa
          *gPstar_u_vol(i,j)/vol(i,j)
 
          ue(i,j)=ue_i(i,j)-de_i*((Pstar(i+1,j)-Pstar(i,j))/(x(i+1)-x(i))&
-              -gPstar_e_i)+(1.0_dp-lambdau)*(ue_n(i,j)-ue_i_n(i,j))&
-              +de_i*(B_e_i(i,j)-B_e_iii(i,j))
+              -gPstar_e_i)+(1.0_dp-lambdau)*(ue_n(i,j)-ue_i_n(i,j)) ! &
+              ! +de_i*(B_e_i(i,j)-B_e_iii(i,j))
 
         end if
 
@@ -118,8 +118,8 @@ module flujo_de_masa
            *gPstar_u_vol(i,j)/vol(i,j)
 
            uw(i,j)=uw_i(i,j)-dw_i*((Pstar(i,j)-Pstar(i-1,j))/(x(i)-x(i-1))&
-                -gPstar_w_i)+(1.0_dp-lambdau)*(uw_n(i,j)-uw_i_n(i,j))&
-                +dw_i*(B_w_i(i,j)-B_w_iii(i,j))
+                -gPstar_w_i)+(1.0_dp-lambdau)*(uw_n(i,j)-uw_i_n(i,j)) ! &
+                ! +dw_i*(B_w_i(i,j)-B_w_iii(i,j))
 
         end if
 
@@ -139,8 +139,8 @@ module flujo_de_masa
            *gPstar_v_vol(i,j)/vol(i,j)
 
            vn(i,j)=vn_i(i,j)-dn_i*((Pstar(i,j+1)-Pstar(i,j))/(y(j+1)-y(j))&
-                -gPstar_n_i)+(1.0_dp-lambdav)*(vn_n(i,j)-vn_i_n(i,j))&
-                +dn_i*(B_n_i(i,j)-B_n_iii(i,j))
+                -gPstar_n_i)+(1.0_dp-lambdav)*(vn_n(i,j)-vn_i_n(i,j)) ! &
+                ! +dn_i*(B_n_i(i,j)-B_n_iii(i,j))
 
         end if
 
@@ -160,8 +160,8 @@ module flujo_de_masa
            *gPstar_v_vol(i,j)/vol(i,j)
 
            vs(i,j)=vs_i(i,j)-ds_i*((Pstar(i,j)-Pstar(i,j-1))/(y(j)-y(j-1))&
-                -gPstar_s_i)+(1.0_dp-lambdav)*(vs_n(i,j)-vs_i_n(i,j))&
-                +ds_i*(B_s_i(i,j)-B_s_iii(i,j))
+                -gPstar_s_i)+(1.0_dp-lambdav)*(vs_n(i,j)-vs_i_n(i,j)) ! &
+                ! +ds_i*(B_s_i(i,j)-B_s_iii(i,j))
 
         end if
 

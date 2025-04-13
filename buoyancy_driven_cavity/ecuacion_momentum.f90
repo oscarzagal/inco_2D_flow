@@ -16,8 +16,8 @@ module ecuacion_momentum
 
     do j=2,ny-1
        do i=2,nx-1
-        fx_flotacion(i,j)=g*sin(theta)*(beta*(T(i,j)-T_inf))*vol(i,j)
-        fy_flotacion(i,j)=g*cos(theta)*(beta*(T(i,j)-T_inf))*vol(i,j)
+        fx_flotacion(i,j)=g*sin(theta)*(beta*(T(i,j)-(T_C+T_F)*0.5_dp))*vol(i,j)
+        fy_flotacion(i,j)=g*cos(theta)*(beta*(T(i,j)-(T_C+T_F)*0.5_dp))*vol(i,j)
        end do
     end do
 

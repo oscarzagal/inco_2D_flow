@@ -7,25 +7,26 @@ module variables_globales
 
   ! Subrelajacion
   real(dp), parameter :: lambdaP=0.3_dp
-  real(dp), parameter :: lambdau=0.6_dp
-  real(dp), parameter :: lambdav=0.6_dp
-  real(dp), parameter :: lambdaT=0.1_dp
+  real(dp), parameter :: lambdau=0.9_dp
+  real(dp), parameter :: lambdav=0.9_dp
+  real(dp), parameter :: lambdaT=0.7_dp
 
   ! Variables geometricas
-  integer, parameter :: nx=55,ny=55
-  real(dp), parameter :: hx=0.05_dp,hy=0.05_dp
+  integer, parameter :: nx=171,ny=171
+  ! real(dp), parameter :: hx=0.05_dp,hy=0.05_dp
+  real(dp), parameter :: hx=0.2167_dp,hy=0.2167_dp
   real(dp), dimension(nx) :: x,deltax
   real(dp), dimension(ny) :: y,deltay
   real(dp), dimension(nx,ny) :: vol
 
   ! Paso de tiempo para el falso transitorio
-  real(dp), parameter :: deltat=0.35_dp
+  real(dp), parameter :: deltat=0.05_dp
 
   ! Interpolacion
   real(dp), dimension(nx,ny) :: ge,gw,gn,gs
 
   ! Limite de iteraciones
-  integer, parameter :: limite=50000
+  integer, parameter :: limite=90000
 
   ! Tolerancia
   real(dp), parameter :: epsilon=1e-5_dp
@@ -36,32 +37,24 @@ module variables_globales
   ! Viscosidad dinamica
   real(dp), parameter :: nu=1.562e-5_dp
 
-  ! Temperatura de referencia
-  real(dp), parameter :: T_inf=25.0_dp
-
   ! Coeficiente de expansividad termica
   real(dp), parameter :: beta=1.0_dp/(25.0_dp+273.15_dp)
 
-  ! Densidad
-  real(dp), parameter :: rho=1.0_dp
-
-  ! Calor espefico
-  real(dp), parameter :: Cp=7006.071_dp
-
-  ! Conductividad termica
-  real(dp), parameter :: k_ter=0.15_dp
-
   ! Difusividad termica
-  real(dp), parameter :: alpha=k_ter/(rho*Cp)
-
+  real(dp), parameter :: alpha=2.141e-5_dp
 
 
   ! Condiciones de frontera para la ecuacion de la energia
-  real(dp), parameter :: T_C=25.0814_dp
-  real(dp), parameter :: T_F=25.0_dp
+  ! real(dp), parameter :: T_C=25.0814_dp
+  ! real(dp), parameter :: T_F=25.0_dp
+
+  ! Independientemente del Rayleigh, la solucion depende fuertemente de las
+  ! condiciones de frontera.
+  real(dp), parameter :: T_C=1.0_dp
+  real(dp), parameter :: T_F=0.0_dp
 
   ! Gravedad
-  real(dp), parameter :: g=-9.81_dp
+  real(dp), parameter :: g=9.81_dp
 
   ! Angulo de rotacion de la cavidad
   real(dp), parameter :: theta=0.0_dp
@@ -70,7 +63,7 @@ module variables_globales
   real(dp), dimension(nx,ny) :: fx_flotacion,fy_flotacion
 
   ! Numero de Rayleigh
-  real(dp), parameter :: Ra=-(g*beta*(T_C-T_F)*hx**3.0_dp)/(alpha*nu)
+  real(dp), parameter :: Ra=(g*beta*(T_C-T_F)*hx**3.0_dp)/(alpha*nu)
 
   ! Condicion de frontera de pared deslizante
   real(dp), parameter :: Uo=0.0_dp

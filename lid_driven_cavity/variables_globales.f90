@@ -21,7 +21,7 @@ module variables_globales
   real(dp), parameter :: lambdav=0.6_dp
 
   ! Variables geometricas
-  integer, parameter :: nx=121,ny=121
+  integer, parameter :: nx=171,ny=171
   ! real(dp), parameter :: hx=0.1_dp,hy=0.1_dp
   real(dp), parameter :: hx=1.0_dp,hy=1.0_dp
   real(dp), dimension(nx) :: x,deltax
