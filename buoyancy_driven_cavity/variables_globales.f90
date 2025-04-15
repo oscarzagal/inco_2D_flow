@@ -2,6 +2,9 @@ module variables_globales
   use, intrinsic :: iso_fortran_env, only: sp=>real32, dp=>real64
   implicit none
 
+  ! Definicion de PI
+  real(dp), parameter :: PI=4.0_dp*atan(1.0_dp)
+
   ! Variables para bucles
   integer :: i,j,k
 
@@ -13,11 +16,20 @@ module variables_globales
 
   ! Variables geometricas
   integer, parameter :: nx=171,ny=171
-  ! real(dp), parameter :: hx=0.05_dp,hy=0.05_dp
-  real(dp), parameter :: hx=0.2167_dp,hy=0.2167_dp
+  ! real(dp), parameter :: hx=0.02167_dp,hy=0.02167_dp ! Ra=10^3
+  ! real(dp), parameter :: hx=0.02167_dp,hy=0.010835_dp ! Ra=10^3
+  real(dp), parameter :: hx=0.2167_dp,hy=0.2167_dp ! Ra=10^6
+  ! real(dp), parameter :: hx=0.2167_dp,hy=0.10835_dp ! Ra=10^6
   real(dp), dimension(nx) :: x,deltax
   real(dp), dimension(ny) :: y,deltay
+  real(dp), dimension(nx*ny) :: x_r,y_r !Coordenandas para malla rotada
   real(dp), dimension(nx,ny) :: vol
+
+  ! Distancia de los puntos rotados al origen
+  real(dp), dimension(nx*ny) :: distancia
+
+  ! Angulo de los puntos con respecto a la horizotanl de la cavidad
+  real(dp), dimension(nx*ny) :: xi
 
   ! Paso de tiempo para el falso transitorio
   real(dp), parameter :: deltat=0.05_dp
@@ -57,7 +69,8 @@ module variables_globales
   real(dp), parameter :: g=9.81_dp
 
   ! Angulo de rotacion de la cavidad
-  real(dp), parameter :: theta=0.0_dp
+  real(dp), parameter :: thetaD=0.0_dp
+  real(dp), parameter :: theta=thetaD*PI/180.0_dp
 
   ! Fuerza de flotacion
   real(dp), dimension(nx,ny) :: fx_flotacion,fy_flotacion
@@ -155,6 +168,9 @@ module variables_globales
 
   ! Magnitud de la velocidad
   real(dp), dimension(nx,ny) :: Umag
+
+  ! Suma del flujo de masa
+  real(dp), dimension(nx,ny) :: sumMdot
 
 
 end module variables_globales

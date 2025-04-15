@@ -47,8 +47,8 @@ module correccion
           else
 
              me_star(i,j)=me_star(i,j)+0.5_dp*(1.0_dp/ap_u(i,j)&
-                  +1.0_dp/ap_u(i+1,j))*(Pprime(i,j)-Pprime(i+1,j))/(x(i+1)-x(i))&
-                  *(deltay(j)**2.0_dp)*deltax(i)
+                  +1.0_dp/ap_u(i+1,j))*(Pprime(i,j)-Pprime(i+1,j))/ &
+                  (x_r(i+1+nx*(j-1))-x_r(i+nx*(j-1)))*(deltay(j)**2.0_dp)*deltax(i)
           end if
 
           if (i==2) then
@@ -56,8 +56,8 @@ module correccion
           else
 
              mw_star(i,j)=mw_star(i,j)+0.5_dp*(1.0_dp/ap_u(i,j)&
-                  +1.0_dp/ap_u(i-1,j))*(Pprime(i,j)-Pprime(i-1,j))/(x(i)-x(i-1))&
-                  *(deltay(j)**2.0_dp)*deltax(i)
+                  +1.0_dp/ap_u(i-1,j))*(Pprime(i,j)-Pprime(i-1,j))/ &
+                  (x_r(i+nx*(j-1))-x_r(i-1+nx*(j-1)))*(deltay(j)**2.0_dp)*deltax(i)
           end if
 
           if (j==ny-1) then
@@ -65,8 +65,8 @@ module correccion
           else
 
              mn_star(i,j)=mn_star(i,j)+0.5_dp*(1.0_dp/ap_v(i,j)&
-                  +1.0_dp/ap_v(i,j+1))*(Pprime(i,j)-Pprime(i,j+1))/(y(j+1)-y(j))&
-                  *(deltax(i)**2.0_dp)*deltay(j)
+                  +1.0_dp/ap_v(i,j+1))*(Pprime(i,j)-Pprime(i,j+1))/ &
+                  (y_r(i+nx*(j))-y_r(i+nx*(j-1)))*(deltax(i)**2.0_dp)*deltay(j)
           end if
 
           if (j==2) then
@@ -74,8 +74,8 @@ module correccion
           else
 
              ms_star(i,j)=ms_star(i,j)+0.5_dp*(1.0_dp/ap_v(i,j)&
-                  +1.0_dp/ap_v(i,j-1))*(Pprime(i,j)-Pprime(i,j-1))/(y(j)-y(j-1))&
-                  *(deltax(i)**2.0_dp)*deltay(j)
+                  +1.0_dp/ap_v(i,j-1))*(Pprime(i,j)-Pprime(i,j-1))/ &
+                  (y_r(i+nx*(j-1))-y_r(i+nx*(j-2)))*(deltax(i)**2.0_dp)*deltay(j)
 
           end if
 

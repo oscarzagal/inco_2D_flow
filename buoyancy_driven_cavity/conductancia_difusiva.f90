@@ -18,10 +18,10 @@ module conductancia_difusiva
 
     do j=2,ny-1
       do i=2,nx-1
-        FluxFe_dif(i,j)=gamma*deltay(j)/(x(i+1)-x(i))
-        FluxFw_dif(i,j)=gamma*deltay(j)/(x(i)-x(i-1))
-        FluxFn_dif(i,j)=gamma*deltax(i)/(y(j+1)-y(j))
-        FluxFs_dif(i,j)=gamma*deltax(i)/(y(j)-y(j-1))
+        FluxFe_dif(i,j)=gamma*deltay(j)/(x_r(i+1+nx*(j-1))-x_r(i+nx*(j-1)))
+        FluxFw_dif(i,j)=gamma*deltay(j)/(x_r(i+nx*(j-1))-x_r(i-1+nx*(j-1)))
+        FluxFn_dif(i,j)=gamma*deltax(i)/(y_r(i+nx*(j))-y_r(i+nx*(j-1)))
+        FluxFs_dif(i,j)=gamma*deltax(i)/(y_r(i+nx*(j-1))-y_r(i+nx*(j-2)))
       end do
     end do
 

@@ -44,10 +44,10 @@ module ecuacion_presion
             ds_i=0.5_dp*deltax(i)*deltay(j)*(1.0_dp/ap_v(i,j)+1.0_dp/ap_v(i,j-1))
          end if
 
-         ae_p(i,j)=-de_i*deltay(j)/(x(i+1)-x(i))
-         aw_p(i,j)=-dw_i*deltay(j)/(x(i)-x(i-1))
-         an_p(i,j)=-dn_i*deltax(i)/(y(j+1)-y(j))
-         as_p(i,j)=-ds_i*deltax(i)/(y(j)-y(j-1))
+         ae_p(i,j)=-de_i*deltay(j)/(x_r(i+1+nx*(j-1))-x_r(i+nx*(j-1)))
+         aw_p(i,j)=-dw_i*deltay(j)/(x_r(i+nx*(j-1))-x_r(i-1+nx*(j-1)))
+         an_p(i,j)=-dn_i*deltax(i)/(y_r(i+nx*(j))-y_r(i+nx*(j-1)))
+         as_p(i,j)=-ds_i*deltax(i)/(y_r(i+nx*(j-1))-y_r(i+nx*(j-2)))
          ap_p(i,j)=-(ae_p(i,j)+aw_p(i,j)+an_p(i,j)+as_p(i,j))
          b_p(i,j)=-(me_star(i,j)+mw_star(i,j)+mn_star(i,j)+ms_star(i,j))
 

@@ -26,7 +26,7 @@ module escritura
     write(id,*)""
     do j=1,ny
       do i=1,nx
-        write(id,*)x(i),y(j),psi(i,j)
+        write(id,*)x_r(i+nx*(j-1)),y_r(i+nx*(j-1)),psi(i,j)
       end do
     end do
     close(id)

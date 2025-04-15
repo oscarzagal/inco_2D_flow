@@ -28,6 +28,9 @@ program main
   ! Calculo de los factores de ponderacion de la interpolacion por volumen
   call inter_vol()
 
+  ! Generacion de los puntos rotados
+  call mallado_rotado()
+
   ! Inicializacion de los coeficientes "ap" para evitar errores de punto
   ! flotante
   ap_u(:,:)=1.0_dp
@@ -260,11 +263,20 @@ do while(error_mayor .gt. epsilon)
 end do ! Fin del bucle SIMPLE
 
   write(*,*)" "
+  write(*,*)"Angulo de rotacion =",theta
   write(*,*)"deltat falso =",deltat
   write(*,*)"Difusividad termica =",alpha
   write(*,*)"Numero de Prandtl =",nu/alpha
   write(*,*)"Numero de Rayleigh =", Ra
   write(*,*)" "
+
+
+  ! Suma del flujo de masa
+  do j=1,ny
+     do i=1,nx
+        sumMdot(i,j)=me_star(i,j)+mw_star(i,j)+mn_star(i,j)+ms_star(i,j)
+     end do
+  end do
 
 
   ! Magnitud de la velocidad
@@ -276,7 +288,9 @@ end do ! Fin del bucle SIMPLE
 
   call escritura_(90,'Pstar.dat','Pstar',Pstar)
   call escritura_(90,'Umag.dat','Umag',Umag)
-  call escritura_(10,'me.dat','me',me_star)
+  call escritura_(10,'sumMdot.dat','sumMdot',sumMdot)
   call escritura_(76, 'T.dat', 'T', T)
+  call escritura_(73, 'u.dat', 'u', u_star)
+  call escritura_(71, 'v.dat', 'v', v_star)
 
 end program main

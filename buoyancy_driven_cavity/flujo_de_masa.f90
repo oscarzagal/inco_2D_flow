@@ -51,10 +51,10 @@ module flujo_de_masa
          B_s_i(i,j)=gs(i,j)*fy_flotacion(i,j-1)+(1.0_dp-gs(i,j))*fy_flotacion(i,j)
 
          ! Promediado 2 veces
-         B_u_ii(i,j)=(-1.0_dp*((1.0_dp-ge(i,j))*(B_e_i(i,j)*(x(i+1)-x(i))*deltay(j))) &
-         -((1.0_dp-gw(i,j))*(B_w_i(i,j)*(x(i)-x(i-1))*deltay(j))))/vol(i,j)
-         B_v_ii(i,j)=(-1.0_dp*((1.0_dp-gn(i,j))*(B_n_i(i,j)*(y(j+1)-y(j))*deltax(i))) &
-         -((1.0_dp-gs(i,j))*(B_s_i(i,j)*(y(j)-y(j-1))*deltax(i))))/vol(i,j)
+         B_u_ii(i,j)=(-1.0_dp*((1.0_dp-ge(i,j))*(B_e_i(i,j)*(x_r(i+1+nx*(j-1))-x_r(i+nx*(j-1)))*deltay(j))) &
+         -((1.0_dp-gw(i,j))*(B_w_i(i,j)*(x_r(i+nx*(j-1))-x_r(i-1+nx*(j-1)))*deltay(j))))/vol(i,j)
+         B_v_ii(i,j)=(-1.0_dp*((1.0_dp-gn(i,j))*(B_n_i(i,j)*(y_r(i+nx*(j))-y_r(i+nx*(j-1)))*deltax(i))) &
+         -((1.0_dp-gs(i,j))*(B_s_i(i,j)*(y_r(i+nx*(j-1))-y_r(i+nx*(j-2)))*deltax(i))))/vol(i,j)
 
         end do
       end do
@@ -96,9 +96,9 @@ module flujo_de_masa
          gPstar_e_i=ge(i,j)*gPstar_u_vol(i+1,j)/vol(i+1,j)+(1.0_dp-ge(i,j))&
          *gPstar_u_vol(i,j)/vol(i,j)
 
-         ue(i,j)=ue_i(i,j)-de_i*((Pstar(i+1,j)-Pstar(i,j))/(x(i+1)-x(i))&
-              -gPstar_e_i)+(1.0_dp-lambdau)*(ue_n(i,j)-ue_i_n(i,j)) ! &
-              ! +de_i*(B_e_i(i,j)-B_e_iii(i,j))
+         ue(i,j)=ue_i(i,j)-de_i*((Pstar(i+1,j)-Pstar(i,j))/(x_r(i+1+nx*(j-1))-x_r(i+nx*(j-1)))&
+              -gPstar_e_i)+(1.0_dp-lambdau)*(ue_n(i,j)-ue_i_n(i,j)) &
+              +de_i*(B_e_i(i,j)-B_e_iii(i,j))
 
         end if
 
@@ -117,9 +117,9 @@ module flujo_de_masa
            gPstar_w_i=gw(i,j)*gPstar_u_vol(i-1,j)/vol(i-1,j)+(1.0_dp-gw(i,j))&
            *gPstar_u_vol(i,j)/vol(i,j)
 
-           uw(i,j)=uw_i(i,j)-dw_i*((Pstar(i,j)-Pstar(i-1,j))/(x(i)-x(i-1))&
-                -gPstar_w_i)+(1.0_dp-lambdau)*(uw_n(i,j)-uw_i_n(i,j)) ! &
-                ! +dw_i*(B_w_i(i,j)-B_w_iii(i,j))
+           uw(i,j)=uw_i(i,j)-dw_i*((Pstar(i,j)-Pstar(i-1,j))/(x_r(i+nx*(j-1))-x_r(i-1+nx*(j-1)))&
+                -gPstar_w_i)+(1.0_dp-lambdau)*(uw_n(i,j)-uw_i_n(i,j)) &
+                +dw_i*(B_w_i(i,j)-B_w_iii(i,j))
 
         end if
 
@@ -138,9 +138,9 @@ module flujo_de_masa
            gPstar_n_i=gn(i,j)*gPstar_v_vol(i,j+1)/vol(i,j+1)+(1.0_dp-gn(i,j))&
            *gPstar_v_vol(i,j)/vol(i,j)
 
-           vn(i,j)=vn_i(i,j)-dn_i*((Pstar(i,j+1)-Pstar(i,j))/(y(j+1)-y(j))&
-                -gPstar_n_i)+(1.0_dp-lambdav)*(vn_n(i,j)-vn_i_n(i,j)) ! &
-                ! +dn_i*(B_n_i(i,j)-B_n_iii(i,j))
+           vn(i,j)=vn_i(i,j)-dn_i*((Pstar(i,j+1)-Pstar(i,j))/(y_r(i+nx*(j))-y_r(i+nx*(j-1)))&
+                -gPstar_n_i)+(1.0_dp-lambdav)*(vn_n(i,j)-vn_i_n(i,j)) &
+                +dn_i*(B_n_i(i,j)-B_n_iii(i,j))
 
         end if
 
@@ -159,9 +159,9 @@ module flujo_de_masa
            gPstar_s_i=gs(i,j)*gPstar_v_vol(i,j-1)/vol(i,j-1)+(1.0_dp-gs(i,j))&
            *gPstar_v_vol(i,j)/vol(i,j)
 
-           vs(i,j)=vs_i(i,j)-ds_i*((Pstar(i,j)-Pstar(i,j-1))/(y(j)-y(j-1))&
-                -gPstar_s_i)+(1.0_dp-lambdav)*(vs_n(i,j)-vs_i_n(i,j)) ! &
-                ! +ds_i*(B_s_i(i,j)-B_s_iii(i,j))
+           vs(i,j)=vs_i(i,j)-ds_i*((Pstar(i,j)-Pstar(i,j-1))/(y_r(i+nx*(j-1))-y_r(i+nx*(j-2)))&
+                -gPstar_s_i)+(1.0_dp-lambdav)*(vs_n(i,j)-vs_i_n(i,j)) &
+                +ds_i*(B_s_i(i,j)-B_s_iii(i,j))
 
         end if
 
