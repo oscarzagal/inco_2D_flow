@@ -9,13 +9,13 @@ module variables_globales
   integer :: i,j,k
 
   ! Subrelajacion
-  real(dp), parameter :: lambdaP=0.3_dp
-  real(dp), parameter :: lambdau=0.9_dp
-  real(dp), parameter :: lambdav=0.9_dp
-  real(dp), parameter :: lambdaT=0.7_dp
+  real(dp), parameter :: lambdaP=0.7_dp
+  real(dp), parameter :: lambdau=0.3_dp
+  real(dp), parameter :: lambdav=0.3_dp
+  real(dp), parameter :: lambdaT=0.5_dp
 
   ! Variables geometricas
-  integer, parameter :: nx=171,ny=171
+  integer, parameter :: nx=161,ny=161
   ! real(dp), parameter :: hx=0.02167_dp,hy=0.02167_dp ! Ra=10^3
   ! real(dp), parameter :: hx=0.02167_dp,hy=0.010835_dp ! Ra=10^3
   real(dp), parameter :: hx=0.2167_dp,hy=0.2167_dp ! Ra=10^6
@@ -28,17 +28,19 @@ module variables_globales
   ! Distancia de los puntos rotados al origen
   real(dp), dimension(nx*ny) :: distancia
 
-  ! Angulo de los puntos con respecto a la horizotanl de la cavidad
+  ! Angulo de los puntos con respecto a la horizontal de la cavidad
   real(dp), dimension(nx*ny) :: xi
 
-  ! Paso de tiempo para el falso transitorio
-  real(dp), parameter :: deltat=0.05_dp
+  ! Paso de tiempo para el falso transitorio (un paso de tiempo de 0.1
+  ! distorsiona un poco la solucion para los vortices inferior y superior
+  ! secundarios)
+  real(dp), parameter :: deltat=0.02_dp
 
   ! Interpolacion
   real(dp), dimension(nx,ny) :: ge,gw,gn,gs
 
   ! Limite de iteraciones
-  integer, parameter :: limite=90000
+  integer, parameter :: limite=900000
 
   ! Tolerancia
   real(dp), parameter :: epsilon=1e-5_dp
@@ -62,8 +64,10 @@ module variables_globales
 
   ! Independientemente del Rayleigh, la solucion depende fuertemente de las
   ! condiciones de frontera.
-  real(dp), parameter :: T_C=1.0_dp
-  real(dp), parameter :: T_F=0.0_dp
+  ! real(dp), parameter :: T_C=1.0_dp
+  ! real(dp), parameter :: T_F=0.0_dp
+  real(dp), parameter :: T_C=26.0_dp
+  real(dp), parameter :: T_F=25.0_dp
 
   ! Gravedad
   real(dp), parameter :: g=9.81_dp
@@ -80,6 +84,7 @@ module variables_globales
 
   ! Condicion de frontera de pared deslizante
   real(dp), parameter :: Uo=0.0_dp
+
 
 
   ! Coeficientes agrupados para la ecuacion de momentum

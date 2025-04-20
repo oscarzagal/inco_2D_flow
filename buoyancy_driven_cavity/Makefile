@@ -11,6 +11,7 @@ SRC=variables_globales.f90\
 		condiciones_frontera.f90\
 		gradiente_explicito.f90\
 		gauss_seidel.f90\
+		ADI.f90\
 		conductancia_difusiva.f90\
 		esquema_upwind.f90\
 		ecuacion_momentum.f90\

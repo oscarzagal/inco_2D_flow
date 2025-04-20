@@ -2,6 +2,7 @@ module ecuacion_presion
   use, intrinsic :: iso_fortran_env, only: sp=>real32, dp=>real64
   use variables_globales
   use gauss_seidel
+  use ADI
   use condiciones_frontera
   use utilidades
   implicit none
@@ -55,6 +56,7 @@ module ecuacion_presion
     end do
 
     call gauss_seidel_(ap_p,ae_p,aw_p,an_p,as_p,b_p,Pprime)
+    ! call ADI_(ap_p,ae_p,aw_p,an_p,as_p,b_p,Pprime)
 
     call actualizar_presion_fronteras(Pprime)
 

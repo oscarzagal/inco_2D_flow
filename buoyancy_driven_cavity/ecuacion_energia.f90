@@ -2,6 +2,7 @@ module ecuacion_energia
   use, intrinsic :: iso_fortran_env, only: sp=>real32, dp=>real64
   use variables_globales
   use gauss_seidel
+  use ADI
   use condiciones_frontera
 
   implicit none
@@ -62,6 +63,7 @@ module ecuacion_energia
     end do
 
     call gauss_seidel_(ap_T,ae_T,aw_T,an_T,as_T,b_T,T)
+    ! call ADI_(ap_T,ae_T,aw_T,an_T,as_T,b_T,T)
 
     ! Actualizar condiciones de frontera
     call temperaturas_fronteras()

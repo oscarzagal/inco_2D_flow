@@ -1,3 +1,6 @@
+! TODO: implementar lo de los terminos en la interpolacion de Rhie-Chow que
+! garantizan la no dependencia del paso de tiempo en la solucion
+
 program main
   use, intrinsic :: iso_fortran_env, only: sp=>real32, dp=>real64
   use variables_globales
@@ -31,31 +34,10 @@ program main
   ! Generacion de los puntos rotados
   call mallado_rotado()
 
-  ! Inicializacion de los coeficientes "ap" para evitar errores de punto
-  ! flotante
-  ap_u(:,:)=1.0_dp
-  ap_v(:,:)=1.0_dp
-  ap_p(:,:)=1.0_dp
-  ap_T(:,:)=1.0_dp
 
-  ! Inicializacion del campo supuesto de presion
-  Pstar(:,:)=1.0_dp
+  ! Inicializacion de campos y variables
+  call inicializacion()
 
-  ! Flujos de masa inicializados en cero
-  me_star(:,:)=0.0_dp
-  mw_star(:,:)=0.0_dp
-  mn_star(:,:)=0.0_dp
-  ms_star(:,:)=0.0_dp
-
-  ! Inicializacion del campo supuesto de velocidad
-  u_star(:,:)=0.0_dp
-  v_star(:,:)=0.0_dp
-
-  u_old=u_star
-  v_old=v_star
-
-  ! Inicializacion del campo de temperaturas
-  T(:,:)=0.0_dp
 
   ! Asignacion de las velocidades en las fronteras
   ! Ecuacion de momentum en "u"
@@ -96,111 +78,11 @@ do while(error_mayor .gt. epsilon)
   ! Se resuelve la ecuacion de correccion de presion
   call ecuacion_presion_()
 
-    ! write(*,*)"Antes de la correccion"
-    ! do j=1,ny
-    !   do i=1,nx
-    !     write(*,*)"v_star(",i,j,") =",v_star(i,j)
-    !     ! write(*,*)"T(",i,j,") =",T(i,j)
-    !   end do
-    ! end do
-    ! write(*,*)" "
-
   ! Correccion de los campos
   call corregir_presion_velocidad_flujo()
 
-    ! write(*,*)"Despues de la correccion"
-    ! do j=1,ny
-    !   do i=1,nx
-    !     write(*,*)"v_star(",i,j,") =",v_star(i,j)
-    !     ! write(*,*)"T(",i,j,") =",T(i,j)
-    !   end do
-    ! end do
-    ! write(*,*)" "
-
-    ! write(*,*)"********************************************"
-    ! write(*,*)"T(3,2) =",T(3,2)
-    ! write(*,*)"T(1,2) =",T(1,2)
-    ! write(*,*)"T(2,3) =",T(2,3)
-    ! write(*,*)"T(2,1) =",T(2,1)
-    ! write(*,*)"********************************************"
-
     ! Resolucion de la ecuacion de la energia
     call ecuacion_energia_()
-
-    ! write(*,*)"Coeficiente ap_v"
-    ! do j=1,ny
-    !   do i=1,nx
-    !     write(*,*)"ap_v(",i,j,") =",ap_v(i,j)
-    !   end do
-    ! end do
-    ! write(*,*)" "
-
-    ! write(*,*)"Coeficiente ae_v"
-    ! do j=1,ny
-    !   do i=1,nx
-    !     write(*,*)"ae_v(",i,j,") =",ae_v(i,j)
-    !   end do
-    ! end do
-    ! write(*,*)" "
-
-    ! write(*,*)"Coeficiente aw_v"
-    ! do j=1,ny
-    !   do i=1,nx
-    !     write(*,*)"aw_v(",i,j,") =",aw_v(i,j)
-    !   end do
-    ! end do
-    ! write(*,*)" "
-
-    ! write(*,*)"Coeficiente an_v"
-    ! do j=1,ny
-    !   do i=1,nx
-    !     write(*,*)"an_v(",i,j,") =",an_v(i,j)
-    !   end do
-    ! end do
-    ! write(*,*)" "
-
-    ! write(*,*)"Coeficiente as_v"
-    ! do j=1,ny
-    !   do i=1,nx
-    !     write(*,*)"as_v(",i,j,") =",as_v(i,j)
-    !   end do
-    ! end do
-    ! write(*,*)" "
-
-    ! write(*,*)"Coeficiente b_v"
-    ! do j=1,ny
-    !   do i=1,nx
-    !     write(*,*)"b_v(",i,j,") =",b_v(i,j)
-    !   end do
-    ! end do
-    ! write(*,*)" "
-
-    ! if (numit==2) exit
-
-    ! do j=1,ny
-    !   do i=1,nx
-    !     write(*,*)"T_old(",i,j,")",T_old(i,j)
-    !   end do
-    ! end do
-
-    ! do j=1,ny
-    !   do i=1,nx
-    !     write(*,*)"T(",i,j,")",T(i,j)
-    !   end do
-    ! end do
-
-  ! write(*,*)"ap_T(2,2) =",ap_T(2,2)
-  ! write(*,*)"ae_T(2,2) =",ae_T(2,2)
-  ! write(*,*)"aw_T(2,2) =",aw_T(2,2)
-  ! write(*,*)"an_T(2,2) =",an_T(2,2)
-  ! write(*,*)"as_T(2,2) =",as_T(2,2)
-  ! write(*,*)"b_T(2,2) =",b_T(2,2)
-  ! write(*,*)"T(2,2) =",T(2,2)
-  ! write(*,*)"mw_star(2,2) =",mw_star(2,2)
-  ! write(*,*)"alpha =",alpha
-
-  ! if (.true.) exit
-
 
   ! Convergencia
   call convergencia(Pstar,Pold,residual_presion)
@@ -244,12 +126,6 @@ do while(error_mayor .gt. epsilon)
   else if (variable==8) then
       nombre="Energia"
   end if
-
-  ! do j=1,ny
-  !    do i=1,nx
-  !       write(*,*)"∑ \dot{m}_{f} =",me_star(i,j)+mw_star(i,j)+mn_star(i,j)+ms_star(i,j)
-  !    end do
-  ! end do
 
   write(*,*)numit,error_mayor," variable: ", nombre
 

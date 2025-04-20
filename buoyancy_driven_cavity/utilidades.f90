@@ -3,7 +3,7 @@ module utilidades
   use variables_globales
   implicit none
 
-  public :: interpolar,inter_vol
+  public :: interpolar,inicializacion,inter_vol
   private
 
   contains
@@ -22,6 +22,72 @@ module utilidades
     end do
 
   end subroutine inter_vol
+
+  ! Inicializacion de campos y variables
+  subroutine inicializacion()
+
+    ! Inicializacion de los coeficientes "ap" para evitar errores de punto
+    ! flotante
+    ap_u(:,:)=1.0_dp
+    ap_v(:,:)=1.0_dp
+    ap_p(:,:)=1.0_dp
+    ap_T(:,:)=1.0_dp
+
+    ! Inicializacion del campo supuesto de presion
+    Pstar(:,:)=1.0_dp
+
+    ! Flujos de masa inicializados en cero
+    me_star(:,:)=0.0_dp
+    mw_star(:,:)=0.0_dp
+    mn_star(:,:)=0.0_dp
+    ms_star(:,:)=0.0_dp
+
+    ! Inicializacion del campo supuesto de velocidad
+    u_star(:,:)=0.0_dp
+    v_star(:,:)=0.0_dp
+
+    u_old=u_star
+    v_old=v_star
+
+    ! Inicializacion del campo de temperaturas
+    T(:,:)=0.0_dp
+
+    ! Coeficientes agrupados
+    ! fronteras norte y sur
+    do i=1,nx
+      ! Ecuacion de momentum
+      b_u(i,ny)=0.0_dp
+      b_u(i,1)=0.0_dp
+      b_v(i,ny)=0.0_dp
+      b_v(i,1)=0.0_dp
+
+      ! Ecuacion de presion
+      as_p(i,ny)=1.0_dp
+      an_p(i,1)=1.0_dp
+
+      ! Ecuacion de energia
+      as_T(i,ny)=1.0_dp
+      an_T(i,1)=1.0_dp
+    end do
+
+    ! fronteras este y oeste
+    do j=2,ny-1
+      ! Ecuacion de momentum
+      b_u(nx,j)=0.0_dp
+      b_u(1,j)=0.0_dp
+      b_v(nx,j)=0.0_dp
+      b_v(1,j)=0.0_dp
+
+      ! Ecuacion de presion
+      aw_p(nx,j)=1.0_dp
+      ae_p(1,j)=1.0_dp
+
+      ! Ecuacion de energia
+      b_T(nx,j)=T_F
+      b_T(1,j)=T_C
+    end do
+
+  end subroutine inicializacion
 
   ! TODO: revisar esta funcion
 

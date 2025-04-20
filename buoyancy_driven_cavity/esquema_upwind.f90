@@ -25,7 +25,6 @@ module esquema_upwind
              +FluxFw_dif_V(i,j)+max(mw_star(i,j),0.0_dp) &
              +FluxFn_dif_V(i,j)+max(0.0_dp,mn_star(i,j)) &
              +FluxFs_dif_V(i,j)+max(ms_star(i,j),0.0_dp) &
-             !)/lambda
              +vol(i,j)/deltat)/lambda
 
         b(i,j)=-gPstar(i,j)+f_flotacion(i,j)+(1.0_dp-lambda)*ap(i,j)*vel(i,j) &
