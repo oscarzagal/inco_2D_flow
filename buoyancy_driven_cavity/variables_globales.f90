@@ -15,7 +15,7 @@ module variables_globales
   real(dp), parameter :: lambdaT=0.5_dp
 
   ! Variables geometricas
-  integer, parameter :: nx=161,ny=161
+  integer, parameter :: nx=121,ny=121
   ! real(dp), parameter :: hx=0.02167_dp,hy=0.02167_dp ! Ra=10^3
   ! real(dp), parameter :: hx=0.02167_dp,hy=0.010835_dp ! Ra=10^3
   real(dp), parameter :: hx=0.2167_dp,hy=0.2167_dp ! Ra=10^6
@@ -31,19 +31,19 @@ module variables_globales
   ! Angulo de los puntos con respecto a la horizontal de la cavidad
   real(dp), dimension(nx*ny) :: xi
 
-  ! Paso de tiempo para el falso transitorio (un paso de tiempo de 0.1
-  ! distorsiona un poco la solucion para los vortices inferior y superior
-  ! secundarios)
-  real(dp), parameter :: deltat=0.02_dp
+  ! Paso de tiempo falso
+  real(dp), parameter :: deltat=0.01_dp
 
   ! Interpolacion
   real(dp), dimension(nx,ny) :: ge,gw,gn,gs
 
   ! Limite de iteraciones
-  integer, parameter :: limite=900000
+  integer, parameter :: limite=9000000
 
   ! Tolerancia
-  real(dp), parameter :: epsilon=1e-5_dp
+  ! NOTE: Si los residuales se muestran muy oscilantes es conveniente bajar el
+  ! valor de la tolerancia
+  real(dp), parameter :: epsilon=1e-11_dp
 
 
   ! Propiedades termofisicas
