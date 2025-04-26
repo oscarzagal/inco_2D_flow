@@ -55,10 +55,10 @@ module ecuacion_presion
       end do
     end do
 
-    call gauss_seidel_(ap_p,ae_p,aw_p,an_p,as_p,b_p,Pprime)
-    ! call ADI_(ap_p,ae_p,aw_p,an_p,as_p,b_p,Pprime)
+    ! call gauss_seidel_(ap_p,ae_p,aw_p,an_p,as_p,b_p,Pprime)
+    call ADI_(ap_p,ae_p,aw_p,an_p,as_p,b_p,Pprime)
 
-    call actualizar_presion_fronteras(Pprime)
+    ! call actualizar_presion_fronteras(Pprime)
 
   end subroutine ecuacion_presion_
 

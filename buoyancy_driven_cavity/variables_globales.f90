@@ -15,7 +15,7 @@ module variables_globales
   real(dp), parameter :: lambdaT=0.5_dp
 
   ! Variables geometricas
-  integer, parameter :: nx=121,ny=121
+  integer, parameter :: nx=54,ny=54
   ! real(dp), parameter :: hx=0.02167_dp,hy=0.02167_dp ! Ra=10^3
   ! real(dp), parameter :: hx=0.02167_dp,hy=0.010835_dp ! Ra=10^3
   real(dp), parameter :: hx=0.2167_dp,hy=0.2167_dp ! Ra=10^6
@@ -38,12 +38,12 @@ module variables_globales
   real(dp), dimension(nx,ny) :: ge,gw,gn,gs
 
   ! Limite de iteraciones
-  integer, parameter :: limite=9000000
+  integer, parameter :: limite=100000
 
   ! Tolerancia
   ! NOTE: Si los residuales se muestran muy oscilantes es conveniente bajar el
   ! valor de la tolerancia
-  real(dp), parameter :: epsilon=1e-11_dp
+  real(dp), parameter :: epsilon=1e-10_dp
 
 
   ! Propiedades termofisicas
@@ -59,13 +59,9 @@ module variables_globales
 
 
   ! Condiciones de frontera para la ecuacion de la energia
-  ! real(dp), parameter :: T_C=25.0814_dp
-  ! real(dp), parameter :: T_F=25.0_dp
 
   ! Independientemente del Rayleigh, la solucion depende fuertemente de las
   ! condiciones de frontera.
-  ! real(dp), parameter :: T_C=1.0_dp
-  ! real(dp), parameter :: T_F=0.0_dp
   real(dp), parameter :: T_C=26.0_dp
   real(dp), parameter :: T_F=25.0_dp
 

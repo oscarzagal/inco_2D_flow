@@ -53,20 +53,18 @@ module ecuacion_energia
                +max(mn_star(i,j),0.0_dp)+max(ms_star(i,j),0.0_dp) &
                +FluxFe_dif_T(i,j)+FluxFw_dif_T(i,j) &
                +FluxFn_dif_T(i,j)+FluxFs_dif_T(i,j) &
-               ! )/lambdaT
                +vol(i,j)/deltat)/lambdaT
 
-          ! b_T(i,j)=0.0_dp
           b_T(i,j)=(1.0_dp-lambdaT)*ap_T(i,j)*T(i,j)+T(i,j)*vol(i,j)/deltat
 
        end do
     end do
 
-    call gauss_seidel_(ap_T,ae_T,aw_T,an_T,as_T,b_T,T)
-    ! call ADI_(ap_T,ae_T,aw_T,an_T,as_T,b_T,T)
+    ! call gauss_seidel_(ap_T,ae_T,aw_T,an_T,as_T,b_T,T)
+    call ADI_(ap_T,ae_T,aw_T,an_T,as_T,b_T,T)
 
     ! Actualizar condiciones de frontera
-    call temperaturas_fronteras()
+    ! call temperaturas_fronteras()
 
   end subroutine ecuacion_energia_
 

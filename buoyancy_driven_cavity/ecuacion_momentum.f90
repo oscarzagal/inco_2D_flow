@@ -19,7 +19,6 @@ module ecuacion_momentum
        do i=2,nx-1
         fx_flotacion(i,j)=g*sin(theta)*(beta*(T(i,j)-(T_C+T_F)*0.5_dp))*vol(i,j)
         fy_flotacion(i,j)=g*cos(theta)*(beta*(T(i,j)-(T_C+T_F)*0.5_dp))*vol(i,j)
-        ! fy_flotacion(i,j)=(1.0_dp-beta*(T(i,j)))*(-g)*vol(i,j)
        end do
     end do
 
@@ -40,12 +39,12 @@ module ecuacion_momentum
 
 
     ! Resolucion de la ecuacion de momentum en "u"
-    call gauss_seidel_(ap_u,ae_u,aw_u,an_u,as_u,b_u,u_star)
-    ! call ADI_(ap_u,ae_u,aw_u,an_u,as_u,b_u,u_star)
+    ! call gauss_seidel_(ap_u,ae_u,aw_u,an_u,as_u,b_u,u_star)
+    call ADI_(ap_u,ae_u,aw_u,an_u,as_u,b_u,u_star)
 
     ! Resolucion de la ecuacion de momentum en "v"
-    call gauss_seidel_(ap_v,ae_v,aw_v,an_v,as_v,b_v,v_star)
-    ! call ADI_(ap_v,ae_v,aw_v,an_v,as_v,b_v,v_star)
+    ! call gauss_seidel_(ap_v,ae_v,aw_v,an_v,as_v,b_v,v_star)
+    call ADI_(ap_v,ae_v,aw_v,an_v,as_v,b_v,v_star)
 
 
   end subroutine ecuacion_momentum_

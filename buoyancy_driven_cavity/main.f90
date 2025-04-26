@@ -146,6 +146,12 @@ end do ! Fin del bucle SIMPLE
   write(*,*)"Numero de Rayleigh =", Ra
   write(*,*)" "
 
+  ! do j=1,ny
+  !    do i=1,nx
+  !       write(*,*)"as_T(",i,j,")",as_T(i,j)
+  !    end do
+  ! end do
+
 
   ! Suma del flujo de masa
   do j=1,ny
