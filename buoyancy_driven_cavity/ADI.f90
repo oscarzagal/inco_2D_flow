@@ -6,17 +6,10 @@ module ADI
   ! coeficiente "P", "Q"
   real(dp), dimension(nx,ny) :: P,Q
 
-  ! Vartiables de apoyo
-  real(dp) :: aephi,anphi,asphi,awphi
-
   public :: ADI_
   private
 
   contains
-
-  ! FIXME: las temperaturas en las fronteras de dirichlet arrojan valores
-  ! negativos. Las fronteras aisladas muestran valores negativos en relacion
-  ! a los valores del interior del dominio
 
   subroutine ADI_(ap,ae,aw,an,as,b,phinew)
     real(dp), dimension(nx,ny), intent(inout) :: ap,ae,aw,an,as,b
@@ -40,20 +33,8 @@ module ADI
 
       do i=2,nx
 
-        if (j < ny) then
-          anphi=an(i,j)*phinew(i,j+1)
-        else
-          anphi=0.0_dp
-        end if
-
-        if (j==1) then
-          asphi=0.0_dp
-        else
-          asphi=as(i,j)*phinew(i,j-1)
-        end if
-
         P(i,j)=ae(i,j)/(ap(i,j)-aw(i,j)*P(i-1,j))
-        Q(i,j)=(anphi+asphi+ &
+        Q(i,j)=(an(i,j)*phinew(i,j+1)+as(i,j)*phinew(i,j-1)+ &
         b(i,j)+aw(i,j)*Q(i-1,j))/(ap(i,j)-aw(i,j)*P(i-1,j))
 
       end do
@@ -73,20 +54,8 @@ module ADI
 
       do j=2,ny
 
-        if (i < nx) then
-          aephi=ae(i,j)*phinew(i+1,j)
-        else
-          aephi=0.0_dp
-        end if
-
-        if (i==1) then
-          awphi=0.0_dp
-        else
-          awphi=aw(i,j)*phinew(i-1,j)
-        end if
-
         P(i,j)=an(i,j)/(ap(i,j)-as(i,j)*P(i,j-1))
-        Q(i,j)=(aephi+awphi+ &
+        Q(i,j)=(ae(i,j)*phinew(i+1,j)+aw(i,j)*phinew(i-1,j)+ &
         b(i,j)+as(i,j)*Q(i,j-1))/(ap(i,j)-as(i,j)*P(i,j-1))
 
       end do

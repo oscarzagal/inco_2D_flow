@@ -1,6 +1,3 @@
-! TODO: implementar lo de los terminos en la interpolacion de Rhie-Chow que
-! garantizan la no dependencia del paso de tiempo en la solucion
-
 program main
   use, intrinsic :: iso_fortran_env, only: sp=>real32, dp=>real64
   use variables_globales

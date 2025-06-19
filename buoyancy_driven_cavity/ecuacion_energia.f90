@@ -12,34 +12,7 @@ module ecuacion_energia
 
   contains
 
-  ! NOTE: subrutina provisional, se debe de refactorizar el archivo
-  ! "esquea_upwind.f90"
-
-  ! subroutine esquema_upwind_energia()
-
-  !   do j=2,ny-1
-  !      do i=2,nx-1
-
-  !         ! Coeficiente central
-  !         FluxCe_conv(i,j)=max(me_star(i,j),0.0_dp)
-  !         FluxCw_conv(i,j)=max(mw_star(i,j),0.0_dp)
-  !         FluxCn_conv(i,j)=max(mn_star(i,j),0.0_dp)
-  !         FluxCs_conv(i,j)=max(ms_star(i,j),0.0_dp)
-
-  !         ! Demas coeficientes
-  !         FluxFe_conv(i,j)=-max(-me_star(i,j),0.0_dp)
-  !         FluxFw_conv(i,j)=-max(-mw_star(i,j),0.0_dp)
-  !         FluxFn_conv(i,j)=-max(-mn_star(i,j),0.0_dp)
-  !         FluxFs_conv(i,j)=-max(-ms_star(i,j),0.0_dp)
-
-  !      end do
-  !   end do
-
-  ! end subroutine esquema_upwind_energia
-
   subroutine ecuacion_energia_()
-
-      ! call esquema_upwind_energia()
 
     do j=2,ny-1
        do i=2,nx-1

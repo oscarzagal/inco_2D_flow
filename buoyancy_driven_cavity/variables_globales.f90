@@ -1,3 +1,9 @@
+! NOTE: la densidad no entra en el argumento del gradiente de presion, lo que
+! hice sin darme cuenta es suponerla con un valor de 1, por lo que no hubo
+! problema. Tengo que tener cuidado con eso, el inverso de la densidad en
+! flujos incompresibles va multiplicando al gradiente de presion.
+! Ver Xaman pagina 58 PDF (41 del libro).
+
 module variables_globales
   use, intrinsic :: iso_fortran_env, only: sp=>real32, dp=>real64
   implicit none
@@ -38,7 +44,7 @@ module variables_globales
   real(dp), dimension(nx,ny) :: ge,gw,gn,gs
 
   ! Limite de iteraciones
-  integer, parameter :: limite=100000
+  integer, parameter :: limite=1000000
 
   ! Tolerancia
   ! NOTE: Si los residuales se muestran muy oscilantes es conveniente bajar el
