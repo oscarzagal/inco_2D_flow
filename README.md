@@ -15,7 +15,7 @@ Pudiendo rotar la cavidad (en el caso de buoyancy driven cavity) para observar l
 - GNU Make 4.3 (mínimo)
 
 # Uso
-Luego de clonar el repositorio a la carpeta de tu preferencia, se puede poner correr a el solver con el siguiente comando:
+Luego de clonar el repositorio a la carpeta de tu preferencia, se puede poner a correr el solver con el siguiente comando:
 
 ```Shell
 make && ./main
