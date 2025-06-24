@@ -1,3 +1,5 @@
+![comparacion][buoyancy_driven_cavity/Ra=10_6_Vel_comparacion_25_26.png]
+
 # inco_2D_flow
 
 Este es un solver aún en desarrollo que tiene la capacidad de resolver los clásicos casos:
