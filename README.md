@@ -7,7 +7,7 @@ Este es un solver aún en desarrollo que tiene la capacidad de resolver los clá
 - lid driven cavity
 - buoyancy driven cavity
 
-Pudiendo rotar la cavidad (en el caso de buoyancy driven cavity) para observar los efectos gravitarios en el fluido. El solver aplica el Método de Volumen Finito de celdas colocadas (Moukalled et al. 2016) para resolver un flujo newtoniano laminar, viscoso, monofásico, incompresible y con fuerzas de cuerpo. Aunque al estar aún en pruebas no está exento de fallos.
+Pudiendo rotar la cavidad (en el caso de buoyancy driven cavity) para observar los efectos gravitarios en el fluido. El solver aplica el Método de Volumen Finito de celdas colocadas (Moukalled et al. 2016) para resolver un flujo newtoniano laminar, viscoso, monofásico, incompresible, en estado estacionario y con fuerzas de cuerpo. Aunque al estar aún en pruebas no está exento de fallos.
 
 # Dependencias.
 - Sistema operativo Linux.
